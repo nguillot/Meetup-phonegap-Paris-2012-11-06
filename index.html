@@ -1,10 +1,10 @@
-<!doctype html>  
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 	
 	<head>
 		<meta charset="utf-8">
 		
-		<title>REX Phonegap</title>
+		<title>REX PhoneGap</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -15,6 +15,7 @@
 		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 		
 		<link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/messages.css">
 		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
 
 		<!-- For syntax highlighting -->
@@ -34,10 +35,10 @@
 		
 		<div class="reveal">
 
-			<!-- Any section element inside of this container is displayed as a slide -->
+			<!-- Début présentation et parties communes -->
 			<div class="slides">
 				<section>
-                    <h1>REX Phonegap</h1>
+                    <h1>REX PhoneGap</h1>
 					<p>
 						<i>
                             <small>
@@ -53,25 +54,469 @@
                     </p>
 				</section>
 
-                <section>
-                    <h2>3 projets</h2>
+                <section id="projets">
+                    <h2>3 projets et un point bonus</h2>
                     <ul>
-                        <li>Projet multiplateforme avec Phonegap</li>
-                        <li>POC Phonegap/Sencha touch</li>
-                        <li>Application Phonegap JQuery Mobile</li>
+                        <li><a href="#/rex-multiplateforme">Projet multiplateforme avec PhoneGap</a></li>
+                        <li><a href="#/poc-sencha">POC PhoneGap/Sencha touch</a></li>
+                        <li><a href="#/jquery-PhoneGap">Applications PhoneGap JQuery Mobile</a></li>
+                        <li><a href="#/performances">Performances/debug ?</a></li>
+                    </ul>
+                </section>
+                <!-- Fin présentation et parties communes -->
+
+                <!-- Pres Projet multiplateforme avec PhoneGap-->
+                <section id="rex-multiplateforme">
+                    <h2>Projet multiplateforme avec PhoneGap</h2>
+                    <ul >
+                        <li class="fragment">Intérêt du multiplateforme ?</li>
+                        <li class="fragment">Exemple d'utilisation</li>
+                        <li class="fragment">Difficultés d'un projet PhoneGap multiplateforme</li>
+                    </ul>
+                </section>
+
+				<section>
+                    <h2>Intérêt du multiplateforme?</h2>
+                    <p>+ Mutualiser les sources des fichiers HTML/CSS/JS</p>
+                    <p>- Ne pas appliquer systématiquement mais en fonction de votre projet</p>
+				</section>
+
+                <section>
+                    <h2>Exemple d'utilisation (1/2)</h2>
+                    <p>
+                        <a href="http://www.judopro.fr" class="image">
+                            <img width="175" height="50" src="./images/logo_judopro.png" alt="Logo Judopro">
+                        </a>
+                    </p>
+                    <p>Contexte du projet, son passif:</p>
+                    <ul>
+                        <li>Démonstration de savoir faire avec une application <a href="https://itunes.apple.com/fr/app/id525252703?mt=8&affId=1910055">native iOS pour iPad</a></li>
+                        <li>Ergonomie fortement personalisée, donc peu de changement entre iOS/iPhone et Android</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h1>Projet multiplateforme avec Phonegap</h1>
+                    <h2>Exemple d'utilisation (2/2)</h2>
+                    <p>Contexte du projet, pourquoi PhoneGap:</p>
+                    <ul>
+                        <li>Volonté de démontrer son savoir faire sur des applications hybrides</li>
+                        <li>Contrainte de temps et de coût pour les versions Android (tablette et téléphone) et iPhone</li>
+                    </ul>
                 </section>
 
-				
-				<section>
-					<h1>Merci</h1>
-                    <p><i><small>- Nicolas Guillot / <a href="http://twitter.com/nicolas_guillot">@nicolas_guillot</a> / nguillot@ippon.fr -</small></i></p>
-				</section>
+                <section>
+                    <h2>Difficultés d'un projet PhoneGap multiplateforme</h2>
+                    <ul>
+                        <li>Fichier <strong>cordova.js</strong> spécifique à chaque plateforme -> charger le bon fichier en fonction de l'OS</li>
+                        <li>Quelle technique employer pour mutualiser les sources HTML/CSS/JS ?</li>
+                    </ul>
+                </section>
 
+                <section>
+                    <h2>Comment charger le bon fichier 'cordova.js' ? (1/4)</h2>
+                    <p>Détection de l'OS:</p>
+                    <pre><code>
+function isAndroid(){
+    return navigator.userAgent.indexOf("Android") > 0;
+}
+
+function isiOS(){
+    return ( navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0
+        || navigator.userAgent.indexOf("iPod") > 0);
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Comment charger le bon fichier 'cordova.js' ? (2/4)</h2>
+                    <p>Chargement du fichier via Html/JS:</p>
+                    <pre><code>
+if(isAndroid()){
+    document.write('&lt;script charset="utf-8" src="js/cordova-2.1.0-android.js"&gt;&lt;\/script&gt;');
+}else if(isiOS()){
+    document.write('&lt;script charset="utf-8\" src="js/cordova-2.1.0-ios.js"&gt;&lt;\/script&gt;');
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Comment charger le bon fichier 'cordova.js' ? (3/4)</h2>
+                    <p>Chargement du fichier via JQuery:</p>
+                    <pre><code>
+if(isAndroid()){
+    $.getScript("js/cordova-2.1.0-android.js");
+}else if(isiOS()){
+    $.getScript("js/cordova-2.1.0-ios.js");
+}
+                    </code></pre>
+                    <p class="warning">Des développeurs ont <a href="https://groups.google.com/forum/#!msg/PhoneGap/LkIN97HYX5k/aP8o_YUQIQcJ">reporté</a> des problèmes de chargement de fichiers locaux sur Android 4.0</p>
+                </section>
+
+                <section>
+                    <h2>Comment charger le bon fichier 'cordova.js' ?  (4/4)</h2>
+                    <p>Chargement du fichier via Zepto:</p>
+                    <pre><code>
+if(isAndroid()){
+    $.get('js/cordova-2.1.0-android.js',
+        function(response){
+            eval(response)
+    });
+} else if(isiOS()){
+    $.get('js/cordova-2.1.0-ios.js',
+        function(response){
+            eval(response)
+    });
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                   <h2>Mutualisation des sources HTML/CSS/JS</h2>
+                    <pre><code>
+MonProjet-www
+    '- www &lt;-----------------code communs
+
+MonProjet-ios
+    |- code spécifique à IOS
+    '- www &lt;-----------------sous module git (ou utilisation des svn externals) pour inclure le projet web
+
+MonProjet-android
+    |- code spécifique à android
+    '- www &lt;-----------------sous module git (ou utilisation des svn externals) pour inclure le projet web
+                    </code></pre>
+                    <p class="fragment">source : <a href="http://PhoneGap.pbworks.com/w/page/28103995/PhoneGap%20project%20structure">ancien wiki de PhoneGap</a> </p>
+                </section>
+
+                <section>
+                   <h2>Points de vigilances avec les sous modules Git</h2>
+                    <ul>
+                        <li>
+                            Pour toutes nouvelles installation:<br />
+                            <strong>git submodule init</strong> et <strong>git submodule update</strong>
+                        </li>
+                        <li>
+                            Avant toute modification d'un sous module, on doit le placer sur la branche désirée
+                            <strong>git checkout master</strong>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                   <h2>Points de vigilances avec les 'svn externals'</h2>
+                    <ul>
+                        <li>
+                            <a href="http://svnbook.red-bean.com/en/1.0/ch07s03.html">Attention à l'utilisation du svn copy</a>.
+                            Il faut vérifier si la référence ne pointe pas sur le trunk, mettre à jour son url le cas échéant.
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+            	    <h1>Des questions ?</h1>
+                    <p><i><small>(La suite ? <a href="#/projets">Oui</a>/<a href="#/fin">Non</a> )</small></i></p>
+                </section>
+                <!-- Fin pres Projet multiplateforme avec PhoneGap-->
+
+                <!-- Début POC Sencha -->
+                <section id="poc-sencha">
+                    <h2>POC PhoneGap/Sencha touch</h2>
+                    <ul>
+                        <li class="fragment">Pourquoi s'intéresser à Sencha Touch ?</li>
+                        <li class="fragment">Pourquoi vouloir marier Sencha Touch et PhoneGap ?</li>
+                        <li class="fragment">Comment faire ?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Pourquoi s'intéresser à Sencha Touch? (1/2)</h2>
+                    <ul>
+                        <li>Utilisation du design pattern MVC</li>
+                        <li>Construction des vues via des composants (on aime, ou pas)</li>
+                        <li>Facile à apprendre : documentation claire et bien fournie</li>
+                        <li>Un système de <a href="http://docs.sencha.com/touch/2-0/#!/guide/profiles">profile</a> permet de personaliser l'application en fonction de son contexte</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Pourquoi s'intéresser à Sencha Touch? (2/2)</h2>
+                    <ul>
+                        <li>Accès aux API natives du device : orientation, appareil photo, notification, état de la connexion réseau.</li>
+                        <li>Plusieurs modes de packaging : applications natives, web ou standalone (pas besoin de serveur Web)</li>
+                        <li>Il est <a href="http://www.infoq.com/research/cross-platform-mobile-tools">connu</a> !</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Pourquoi vouloir marier Sencha Touch et PhoneGap ?</h2>
+                    <p>Pour son système de plugins :</p>
+                    <ul>
+                        <li>Code natif pour les performances</li>
+                        <li>Pas de limites pour l'ajout de fonctionalités supplémentaires : lecture de code barre, accès au NFC sur les téléphones Android, ...</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <ul>
+                        <li>Initialisation du projet Sencha</li>
+                        <li>Lier le fichier <strong>cordova.js</strong> au projet</li>
+                        <li>Utiliser le packaging "standalone" -> pas dans la documentation officielle</li>
+                        <li>Utiliser un système de liens symboliques pour lier les assets générés au(x) projet(s) PhoneGap</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>1 - Initialisation du projet</h3>
+                    <ul>
+                        <li>Télécharger et dézipper le <a href="http://www.sencha.com/products/touch/download/">SDK Sencha Touch</a></li>
+                        <li>Télécharger et installer les <a href="http://www.sencha.com/products/sdk-tools/download">outils du SDK</a></li>
+                        <li>En ligne de commandes, placez-vous dans le répertoire bin du SDK Sencha</li>
+                    </ul>
+                    <pre><code>sencha app create Nom-de-votre-Projet chemin-de-votre-application all</code></pre>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.1 - Lier le fichier 'cordova.js' au projet</h3>
+                    <ul>
+                        <li>Copier les fichiers <strong>cordova-2.1.0-ios.js</strong> et <strong>cordova-2.1.0-android.js</strong> à la racine de votre projet Sencha</li>
+                        <li>Créer le fichier <strong>cordova-loader.js</strong> à la racine de votre projet Sencha</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.1.1 - Lier le fichier 'cordova.js' au projet</h3>
+                    <pre><code>
+function isAndroid(){
+    return navigator.userAgent.indexOf("Android") > 0;
+}
+
+function isiOS(){
+    return ( navigator.userAgent.indexOf("iPhone") > 0 || navigator.userAgent.indexOf("iPad") > 0
+        || navigator.userAgent.indexOf("iPod") > 0);
+}
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.1.2 - Lier le fichier 'cordova.js' au projet</h3>
+                    <pre><code>
+if(isAndroid()){
+    document.write('&lt;script charset="utf-8" src="js/cordova-2.1.0-android.js"&gt;&lt;\/script&gt;');
+}else if(isiOS()){
+    document.write('&lt;script charset="utf-8\" src="js/cordova-2.1.0-ios.js"&gt;&lt;\/script&gt;');
+}
+                    </code></pre>                    
+                </section>
+                
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.2 - Lier le fichier 'cordova.js' au projet</h3>
+                    <p>
+                        <a href="" class="image">
+                            <img height="250" src="./images/arborescence sencha.png" alt="arborescence sencha">
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.3 - Lier le fichier 'cordova.js' au projet</h3>
+                    <p><strong>app.json</strong>: charger le fichier <strong>loader</strong> au lancement de l'application</p>
+                    <pre>
+                        <code>
+"js": [
+        {"path": "cordova-loader.js"},
+        ...
+],
+                        </code>
+                    </pre>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.4 - Lier le fichier 'cordova.js' au projet</h3>
+                    <p><strong>app.json</strong>: intégrer les fichiers <strong>js</strong> dans le packaging:</p>
+                    <pre>
+                        <code>
+"resources": [
+    "cordova-2.1.0-android.js",
+    "cordova-2.1.0-ios.js",
+    ...
+],
+                        </code>
+                    </pre>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>2.5 - Lier le fichier 'cordova.js' au projet</h3>
+                    <p>Pour tester PhoneGap, intégrer dans fichier <strong>index.html</strong> le code :</p>
+                    <pre>
+                        <code>
+&lt;script type="text/javascript"&gt;
+    document.addEventListener("deviceready", function () {
+        alert('Our first PhoneGap app');
+    }, false);
+&lt;/script&gt;
+                        </code>
+                    </pre>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>3.1 -  Utiliser le packaging "standalone"</h3>
+                    <ul>
+                        <li>Dans l'arborescence du projet Sencha, créer le chemin <i>build/package/www</i></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>3.1 -  Utiliser le packaging "standalone"</h3>
+                    <ul>
+                        <li>Puis dans le fichier <strong>app.json</strong>, modifier la variable <i>buildPath</i> pour avoir :</li>
+                    </ul>
+                    <pre>
+                        <code>
+"buildPaths": {
+    "testing": "build/testing",
+    "production": "build/production",
+    "package": "build/package/www",
+    "native": "build/native"
+},
+                        </code>
+                    </pre>
+                </section>
+
+                <section>
+                    <h2>Comment faire ?</h2>
+                    <h3>3.2 - Utiliser le packaging "standalone"</h3>
+                    <ul>
+                        <li>Générer le package 'standalone' via la commande <strong>sencha app build package</strong></li>
+                        <li class="fragment">Les sources -> <strong>build/package/www</strong></li>
+                        <li class="fragment">Faire un lien symbolique vers les répertoires <strong>www</strong> (projet iOS) et <strong>assets/www</strong> (pour Android)</li>
+                    </ul>
+                    <!--<p class="fragment">On peut tout avoir dans le même repository en plaçant les projets iOS et Android dans le répertoire <strong>build/package</strong></p>-->
+                </section>
+
+                <section>
+                    <h1>Démo</h1>
+                </section>
+
+                <section>
+            	    <h1>Des questions ?</h1>
+                    <p><i><small>(La suite ? <a href="#/projets">Oui</a>/<a href="#/fin">Non</a>)</small></i></p>
+                </section>
+                <!-- Fin POC Sencha -->
+
+                <!-- Début JQuery/PhoneGap -->
+                <section id="jquery-PhoneGap">
+                    <h2>Applications PhoneGap JQuery Mobile</h2>
+                    <ul>
+                        <li class="fragment">Projets mis en œuvre</li>
+                        <li class="fragment">Problèmes rencontrés</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Projets mis en œuvre</h3>
+                    <ul>
+                        <li class="fragment">
+                            <p>Ippon/Logicia/Sopra: <a href="déclaration revenue">Application des impôts</a></p>
+                            <ul>
+                                <li class="fragment">Répartition des pages entre le serveur et la partie cliente</li>
+                            </ul>
+                        </li>
+                        <li class="fragment">
+                            <p>Perso: <a href="https://github.com/nguillot/PhoneGap-JQuery-Mobile">Prototype catalogue Open Data Nantes</a></p>
+                            <ul>
+                                <li class="fragment">Toutes les pages sont embarquées dans l'application hybride</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Problèmes rencontrés</h3>
+                    <ul>
+                        <li>En cas d'application répartie sur plusieurs fichiers html, pensez au paramètre <strong>data-ajax=false</strong></li>
+                        <li>Attention aux transitions, spécialement avec les anciennes version d'Android</li>
+                        <li>Pensez à vérifier votre interface sur vos résolutions cibles</li>
+                        <li>Sur iOS, manque de fluidité sur les listes (pas d'inertie)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Démo</h1>
+                </section>
+
+                <section>
+            	    <h1>Des questions ?</h1>
+                    <p><i><small>(La suite ? <a href="#/projets">oui</a>/<a href="#/fin">non</a>)</small></i></p>
+                </section>
+                <!-- Fin JQuery/PhoneGap -->
+
+                <!-- Début Performances -->
+                <section id="performances">
+                    <h2>Performances/debug ?</h2>
+                    <h3>Le debug d'une application PhoneGap</h3>
+                    <p>Référence: le <a href="https://github.com/PhoneGap/PhoneGap/wiki/Debugging-in-PhoneGap">wiki de PhoneGap</a></p>
+                    <ul>
+                        <li><a href="http://ripple.tinyhippos.com">Ripple</a> : n'a pas fonctionné dans le cas de Judopro</li>
+                        <li>Mock de phonegap : <a href="https://github.com/jxp/PhoneGap-desktop">PhoneGap-desktop</a></li>
+                        <li>Options Chrome : <strong>-–allow-file-access-from-files --disable-web-security</strong></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Performances/debug ?</h2>
+                    <h3>Quelques pistes pour améliorer les performances (1/3)</h3>
+                    <ul>
+                        <li>Limiter le nombre d'événements</li>
+                        <li>Limiter la complexité de vos pages HTML</li>
+                        <li>Utiliser un cache et ne rafraîchir les données que lorsque c'est nécessaire.</li>
+                        <li>Compression GZIP/DEFLATE de vos requêtes</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Performances/debug ?</h2>
+                    <h3>Quelques pistes pour améliorer les performances (2/3)</h3>
+                    <ul>
+                        <li>Chargement des pages depuis un serveur : <strong>cache manifest</strong> d'HTML 5</li>
+                        <li>
+                            Sélectionnez vos libraries JS en fonction de votre utilisation
+                        </li>
+                        <blockquote cite="http://net.tutsplus.com/tutorials/javascript-ajax/the-essentials-of-zepto-js/">
+                            Zepto [...] has a very small code base and is feather weight at around 8kb.
+                        </blockquote>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Performances/debug ?</h2>
+                    <h3>Quelques pistes pour améliorer les performances (3/3)</h3>
+                    <p>Encore plus de tips sur le <a href="http://davidbcalhoun.com/2011/mobile-performance-manifesto">mobile performance manifesto</a>!</p>
+                </section>
+
+                <section>
+                    <h1>Des questions ?</h1>
+                    <p><i><small>(La suite ? <a href="#/projets">Oui</a>/<a href="#/fin">Non</a>)</small></i></p>
+                </section>
+                <!-- Fin Performances -->
+
+                <section id="fin">
+                    <h1>Merci</h1>
+                    <p><i><small>- Nicolas Guillot / <a href="http://twitter.com/nicolas_guillot">@nicolas_guillot</a> / nguillot@ippon.fr / <a href="http://www.ippon-mobile.fr/blog/">Blog mobilité Ippon</a>-</small></i></p>
+                    <p>
+                        <a href="" class="image">
+                            <img width="227" height="110" src="./images/logo.png" alt="Logo Ippon">
+                        </a>
+                    </p>
+                </section>
 			</div>
 			
 		</div>
